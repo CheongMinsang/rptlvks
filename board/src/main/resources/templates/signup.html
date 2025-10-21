@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>会員登録</title>
+    <style>
+        body{
+            margin: 0;
+            padding: 20px;
+            background-color: #f0f0f0;
+        }
+        h1{
+            color: #333;
+        }
+        form{
+            padding: 20px;
+            max-width: 400px;
+        }
+        label{
+            display:  block;
+            margin-bottom: 5px;
+        }
+        input{
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px soild #ccc;
+        }
+        button{
+            background-color: blue;
+            color: white;
+            padding: 10px;
+            border: none;
+        }
+    </style>
+</head>
+<body>
+    <h1>会員登録</h1>
+    <div class="error" th:if="${error}" th:text="${error}"></div>
+    <form action="/signup" method="post">
+        <label>ID:</label>
+            <input type="text" name="username" required>
+        <label>PASSWORD:</label>
+            <input type="password" name="password" required>
+        <label>E-MAIL</label>
+            <input type="email" name="email" required>
+        <button type="submit">加入する</button>
+    </form>
+    <a href="/">ホームに戻る</a>
+</body>
+</html>
