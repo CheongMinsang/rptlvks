@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ko" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>会員登録</title>
@@ -32,20 +32,63 @@
             padding: 10px;
             border: none;
         }
+        .error{
+            color: red;
+            margin-bottom: 10px;
+        }
+        #passwordError{
+            color: red;
+            font-size:0.9em;
+            margin-bottom: 10px;
+            /*PASSWORDが一致しない場合にだけ表示*/
+            display: none;
+        }
+
     </style>
 </head>
 <body>
+
     <h1>会員登録</h1>
     <div class="error" th:if="${error}" th:text="${error}"></div>
-    <form action="/signup" method="post">
+    <!-- Formを送る前にcheckPassword()関数を実行する、returnがtrueの時にのみFormを送る-->
+    <form action="/signup" method="post" onsubmit="return checkPassword()">
         <label>ID:</label>
             <input type="text" name="username" required>
         <label>PASSWORD:</label>
-            <input type="password" name="password" required>
+            <input type="password" id="password" name="password" required>
+        <label>PASSWORD再確認</label>
+            <!--　入力するたびにcheckPasswordMatch()関数を実行 -->
+            <input type="password" id="passwordConfirm" required oninput="checkPasswordMatch()">
+            <div id="passwordError">PASSWORDが一致しません、もう一度ご確認ください。</div>
         <label>E-MAIL</label>
             <input type="email" name="email" required>
         <button type="submit">加入する</button>
     </form>
     <a href="/">ホームに戻る</a>
+    <script>
+        //入力するたびにPASSWORDが一致するかを確認
+        function checkPasswordMatch(){
+            var password = document.getElementById("password").value;
+            var passwordConfirm = document.getElementById("passwordConfirm").value;
+            var errorMsg = document.getElementById("passwordError");
+
+            if(password !== passwordConfirm){
+                errorMsg.style.display = "block";
+            } else{
+                errorMsg.style.display = "none";
+            }
+        }
+        //Submitボタンを押した時にPASSWORDが一致するかを確認
+        function checkPassword(){
+            var password = document.getElementById("password").value;
+            var passwordConfirm = document.getElementById("passwordConfirm").value;
+
+            if(password !== passwordConfirm){
+                alert("PASSWORDが一致しません、もう一度ご確認ください。");
+                return false;
+            }
+            return true;
+        }
+    </script>
 </body>
 </html>

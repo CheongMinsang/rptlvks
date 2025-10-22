@@ -15,8 +15,6 @@ import org.springframework.security.web.SecurityFilterChain;
 @Configuration
 //Springセキュリティ機能をONにする
 @EnableWebSecurity
-
-
 public class SecurityConfig {
     //Springが管理する
     @Bean
@@ -24,9 +22,10 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
         //http要請に対しての権限設定が始まる部分
         http
+                .csrf().disable()
                 .authorizeHttpRequests(auth -> auth
                         //誰がどんなURLにアクセスできるのか
-                        .requestMatchers("/h2-console/**").permitAll()
+                        .requestMatchers("/", "/signup","/h2-console/**").permitAll()
                         .anyRequest().permitAll()
                 )
                 .headers(headers -> headers.frameOptions(frame -> frame.disable()));
