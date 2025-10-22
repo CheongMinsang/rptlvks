@@ -39,4 +39,18 @@ public class UserService {
     public boolean usernameCheck(String username){
         return userRepository.existsByUsername(username);
     }
+
+    public User login(String username, String password){
+        // usernameで会員を検索し、ない場合は.orElseを使いNullを変換する
+        User user = userRepository.findByUsername(username).orElse(null);
+        //　会員情報がいない場合
+        if(user == null){
+            throw new IllegalArgumentException("IDまたはPASSWORDが一致しません、もう一度確認してください。");
+        }
+        //　パスワードが合ってない場合
+        if(!user.getPassword().equals(password)){
+            throw new IllegalArgumentException("IDまたはPASSWORDが一致しません、もう一度確認してください。");
+        }
+        return user;
+    }
 }

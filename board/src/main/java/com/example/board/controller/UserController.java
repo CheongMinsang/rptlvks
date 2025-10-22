@@ -4,6 +4,8 @@ import com.example.board.entity.User;
 // userServiceを使用ため宣言する
 import com.example.board.service.UserService;
 //　コンストラクタ自動生成
+import jakarta.servlet.http.HttpSession;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 //　WebRequestを処理するControllerアノテーション
 import org.springframework.stereotype.Controller;
@@ -23,7 +25,7 @@ public class UserController {
     //　会員登録ページ
     @GetMapping("/signup")
     public String signupForm(){
-        //　templates/signup.htmlを見せる
+        //　templates/signup.htmlを作る
         return "signup";
     }
 
@@ -35,7 +37,8 @@ public class UserController {
 
             //　会員登録実行
             User user = userService.signup(username, password, email);
-            return "redirect:/";
+            model.addAttribute("successMessage", "会員登録が完了しました!" );
+            return "login";
 
         //　Error処理
         }catch (IllegalArgumentException e){
@@ -43,5 +46,38 @@ public class UserController {
             //　また会員登録ページへ
             return "signup";
         }
+    }
+    //　ログインページ
+    @GetMapping("/login")
+    public String loginForm(){
+        //　templates/login.htmlを作る
+        return "login";
+    }
+
+    // ログイン処理
+    @PostMapping("/login")
+    public String login(@RequestParam String username,
+                        @RequestParam String password,
+                        HttpSession session, Model model){
+        try{
+            //　ログインを試し、成功すれば会員の情報を持ってくる
+            User user = userService.login(username, password);
+            session.setAttribute("loginUser", user);
+            //　ホーム画面え戻る
+            return "redirect:/";
+        }catch(IllegalArgumentException e){
+            // model.addAttribute("IDまたはPASSWORDが一致しません、もう一度確認してください。", e.getMessage());
+            model.addAttribute("errorMessage", "IDまたはPASSWORDが一致しません、もう一度確認してください。");
+            //　失敗すると再び同じログインページへ
+            return "login";
+        }
+    }
+
+    //　ログアウト処理
+    @GetMapping("/logout")
+    public String logout(HttpSession session){
+        session.invalidate();
+        // ホームに戻る
+        return "index";
     }
 }
