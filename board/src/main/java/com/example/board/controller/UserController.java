@@ -75,6 +75,6 @@ public class UserController {
     public String logout(HttpSession session){
         session.invalidate();
         // ホームに戻る
-        return "index";
+        return "redirect:/";
     }
 }
