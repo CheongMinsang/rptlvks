@@ -35,7 +35,8 @@ public class UserController {
                          @RequestParam String email, Model model){
         try{
             //　会員登録実行
-            User user = userService.signup(username, password, email);model.addAttribute("successMessage", "会員登録が完了しました!" );
+            User user = userService.signup(username, password, email);
+            model.addAttribute("successMessage", "会員登録が完了しました!" );
             return "redirect:/?success=signup";
         //　Error処理
         }catch (IllegalArgumentException e){
