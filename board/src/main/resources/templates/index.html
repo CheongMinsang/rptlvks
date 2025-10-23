@@ -30,6 +30,13 @@
     </style>
 </head>
 <body>
+    <!-- ThymeleafでURLのパラメータを持ってくる-->
+    <script th:inline="javascript">
+        var success = /*[[${param.success}]]*/ null;
+        if(success && success[0] === 'signup'){
+            alert('会員登録が完了しました！');
+        }
+    </script>
     <h1>掲示板</h1>
         <!--　sessionがある時 -->
         <div th:if="${session.loginUser}">

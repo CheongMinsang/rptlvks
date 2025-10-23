@@ -34,12 +34,9 @@ public class UserController {
     public String signup(@RequestParam String username, @RequestParam String password,
                          @RequestParam String email, Model model){
         try{
-
             //　会員登録実行
-            User user = userService.signup(username, password, email);
-            model.addAttribute("successMessage", "会員登録が完了しました!" );
-            return "login";
-
+            User user = userService.signup(username, password, email);model.addAttribute("successMessage", "会員登録が完了しました!" );
+            return "redirect:/?success=signup";
         //　Error処理
         }catch (IllegalArgumentException e){
             model.addAttribute("申し訳ございません、不可能な要請です、再度確認してください",e.getMessage());
