@@ -56,7 +56,7 @@ public class Board {
         createdAt = LocalDateTime.now();
         updatedAt = LocalDateTime.now();
     }
-    @PrePersist
+    @PreUpdate
     protected void onUpdate(){
         updatedAt = LocalDateTime.now();
     }

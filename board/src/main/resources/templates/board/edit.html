@@ -1,10 +1,73 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org" lang="ja">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>掲示板修正</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            background-color: #f0f0f0;
+        }
+        h1 {
+            color: #333;
+        }
+        form {
+            background-color: white;
+            padding: 20px;
+            max-width: 600px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        input, textarea {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid;
+        }
+        textarea {
+            height: 200px;
+            resize: vertical;
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid;
+            background-color: #f0f0f0;
+        }
+        button {
+            background-color: blue;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            margin-right: 10px;
+        }
+        a {
+            color: blue;
+            text-decoration: none;
+        }
+    </style>
 </head>
 <body>
+<h1>掲示板修正</h1>
 
+<!-- 修正Form -->
+<form th:action="@{/board/{id}/edit(id=${board.id})}" method="post">
+    <!-- タイトル　-->
+    <label>タイトル:</label>
+    <!-- th:value="${board.title}": 本来のタイトル -->
+        <input type="text" name="title" th:value="${board.title}" required>
+
+    <!-- 本文 -->
+    <label>本文:</label>
+    <!-- 本来の本文 -->
+    <textarea name="context" required th:text="${board.context}"></textarea>
+
+    <div>
+        <!-- Form提出 -->
+        <button type="submit">修正</button>
+        <button type="button" onclick="history.back()">キャンセル</button>
+    </div>
+</form>
 </body>
 </html>

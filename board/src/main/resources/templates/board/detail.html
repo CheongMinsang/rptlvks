@@ -1,10 +1,83 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org" lang="ja">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>掲示板詳細</title>
+    <style>
+        body{
+            margin: 0;
+            padding: 20px;
+            background-color: #f0f0f0;
+        }
+        a {
+            color: blue;
+            text-decoration: none;
+        }
+        h1{
+            color:#333;
+        }
+        .board-detail{
+            padding: 20px;
+            max-width: 800px;
+        }
+        .board-info{
+            border-bottom: 1px solid;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+        }
+        .board-context{
+            /* 列の間隔 */
+            line-height: 1.8;
+            /* 最低の高さ */
+            min-height: 200px;
+            margin-bottom: 20px;
+        }
+        button, .button{
+            background-color: blue;
+            color: white;
+            text-decoration: none;
+            padding: 10px 20px;
+            border: none;
+            display: inline-block;
+            margin-right: 10px;
+        }
+        .button-delete {
+            background-color: red;
+        }
+    </style>
 </head>
 <body>
+<h1 th:text="${board.title}"></h1>
 
+<div class="board-detail">
+
+    <!-- 情報 -->
+    <div class="board-info">
+        作成者: <span th:text="${board.user.username}"></span> |
+        作成日: <span th:text="${#temporals.format(board.createdAt, 'yyyy-MM-dd HH:mm')}"></span> |
+        クリック数: <span th:text="${board.views}"></span>
+    </div>
+
+    <!-- 本文 -->
+    <div class="board-context">
+        <p th:text="${board.context}"></p>
+    </div>
+
+    <div>
+        <!-- session確認 -->
+        <div th:if="${session.loginUser != null and session.loginUser.id == board.user.id}">
+            <!-- 修正 -->
+            <a th:href="@{/board/{id}/edit(id=${board.id})}" class="button">修正</a>
+            <!-- 削除 -->
+            <form th:action="@{/board/{id}/delete(id=${board.id})}"
+                  method="post"
+                  style="display: inline;"
+                  onsubmit="return confirm('本当に削除しますか?');">
+                <button type="submit" class="button .button-delete">削除</button>
+            </form>
+        </div>
+        <a href="/board/list">リストに戻る</a>
+    </div>
+</div>
 </body>
 </html>

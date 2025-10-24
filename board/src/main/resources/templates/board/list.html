@@ -1,10 +1,80 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org" lang="ja">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>掲示板リスト</title>
+    <style>
+        body{
+            margin: 0;
+            padding: 20px;
+            background-color: #f0f0f0;
+        }
+        h1 {
+            color: #333;
+        }
+        table{
+            width: 100%;
+            /*　borderを合わせる　*/
+            border-collapse: collapse;
+        }
+        th, td{
+            border: 1px solid;
+            padding: 10px;
+            text-align: left;
+        }
+        a{
+            text-decoration: none;
+            color: blue;
+        }
+        a:hover{
+            text-decoration: underline;
+        }
+        .button{
+            background-color: blue;
+            text-decoration: none;
+            display: inline-block;
+            color: white;
+            padding: 10px 20px;
+            margin-bottom: 10px;
+            border: none;
+        }
+    </style>
 </head>
 <body>
-
+    <h1>掲示板リスト</h1>
+    <div th:if="${session.loginUser}">
+        <a href="/board/write" class="button">作成</a>
+    </div>
+    <table>
+        <thead>
+            <tr>
+                <th>No</th>
+                <th>タイトル</th>
+                <th>作成者</th>
+                <th>作成日</th>
+                <th>クリック数</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="board : ${boards}">
+                <td th:text="${board.id}"></td>
+                <!--　タイトルをクリックすると詳細ページに移動 -->
+                <td>
+                    <a th:href="@{/board/{id}(id=${board.id})}"
+                       th:text="${board.title}"></a>
+                </td>
+                <td th:text="${board.user.username}"></td>
+                <td th:text="${#temporals.format(board.createdAt,'yyyy-MM-dd HH:mm')}"></td>
+                <td th:text="${board.views}"></td>
+            </tr>
+            <!-- 掲示板に何もない場合　-->
+            <tr th:if="${#lists.isEmpty(boards)}">
+                <td colspan="5" style="text-align: center;">
+                    作成した物がございません、一番最初の掲示文を作成してみてください！
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <a href="/">ホームに戻る</a>
 </body>
 </html>
