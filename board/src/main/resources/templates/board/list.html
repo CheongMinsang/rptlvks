@@ -38,6 +38,25 @@
             margin-bottom: 10px;
             border: none;
         }
+        .paging{
+            margin-top: 20px;
+            text-align: center;
+        }
+        .paging a, .paging span{
+            text-decoration: none;
+            padding: 8px 12px;
+            margin: 0 5px;
+            border: 1px solid;
+            color: #333;
+            display: inline-block;
+        }
+        .paging .active{
+            background-color:blue;
+            color:white;
+        }
+        .paging .disabled{
+            color: #ccc;
+        }
     </style>
 </head>
 <body>
@@ -56,7 +75,7 @@
             </tr>
         </thead>
         <tbody>
-            <tr th:each="board : ${boards}">
+            <tr th:each="board : ${boardPage.content}">
                 <td th:text="${board.id}"></td>
                 <!--　タイトルをクリックすると詳細ページに移動 -->
                 <td>
@@ -68,13 +87,47 @@
                 <td th:text="${board.views}"></td>
             </tr>
             <!-- 掲示板に何もない場合　-->
-            <tr th:if="${#lists.isEmpty(boards)}">
+            <tr th:if="${boardPage.totalElements == 0}">
                 <td colspan="5" style="text-align: center;">
                     作成した物がございません、一番最初の掲示文を作成してみてください！
                 </td>
             </tr>
         </tbody>
     </table>
+    <!-- １ページ以上ある場合　-->
+    <div class="paging" th:if="${boardPage.totalPages > 0}">
+        <!-- 前のページがある場合-->
+        <a th:if="${boardPage.hasPrevious()}"
+            th:href="@{/board/list(page=${boardPage.number - 1 })}">
+            <-　前
+        </a>
+        <!-- 前のページがない場合　-->
+        <!-- unless = falseのようにifの反対　-->
+        <span th:unless="${boardPage.hasPrevious()}" class="disabled">
+            <- 前
+        </span>
+
+        <!-- ページの番号ボタン　-->
+        <!-- ０から全体ページナンバー-1までの数字を生成　-->
+        <a th:each="i : ${#numbers.sequence(0, boardPage.totalPages - 1)}"
+           th:href="${i == boardPage.number} ? '#' : @{/board/list(page=${i})}"
+           th:classappend="${i == boardPage.number} ? 'active'"
+           th:text="${i + 1}">
+        </a>
+
+        <!-- 次のページのボタン　-->
+        <!-- hasNext() = 現在ページが最後のページより少ない場合true -->
+        <a th:if="${boardPage.hasNext()}"
+            th:href="@{/board/list(page=${boardPage.number + 1})}">
+            次　->
+        </a>
+
+        <!-- 次のページがない場合 -->
+        <span th:unless="${boardPage.hasNext()}" class="disabled">
+            次　->
+        </span>
+    </div>
+
     <a href="/">ホームに戻る</a>
 </body>
 </html>

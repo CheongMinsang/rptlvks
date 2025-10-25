@@ -5,6 +5,10 @@ import com.example.board.entity.Board;
 import com.example.board.entity.User;
 import com.example.board.repository.BoardRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,6 +28,17 @@ public class BoardService {
         //　降順に(新しい物が上)持ってきて表示する
         return boardRepository.findAllByOrderByCreatedAtDesc();
     }
+
+    //　ページングメソッド
+    // int page = ページの番号　int size = 一ページに見れる作成文の数
+    public Page<Board> getBoardsWithPaging(int page, int size) {
+        //　PageRequest.of()　＝　ページング情報生成
+        //　Sort.Direction.DESC　＝　降順
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC,"createdAt"));
+
+        return boardRepository.findAllByOrderByCreatedAtDesc(pageable);
+    }
+
     //　作成したIDで探す
     public Board getIdBoard(Long id){
         return boardRepository.findById(id)

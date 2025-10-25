@@ -5,6 +5,7 @@ import com.example.board.entity.User;
 import com.example.board.service.BoardService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -22,12 +23,20 @@ public class BoardController {
     //　BoardService使用
     private final BoardService boardService;
 
-    //　掲示板リスト一覧
+    //　掲示板リスト一覧(ページング追加)
     @GetMapping("/list")
-    public String boardList(Model model){
+    public String boardList(
+            @RequestParam(value = "page", defaultValue = "0") int page,
+            Model model){
+        // 一ページにごとに見せる数
+        int size = 3;
+        // ページングされた作成文リスト
+        Page<Board> boardPage = boardService.getBoardsWithPaging(page, size);
+        model.addAttribute("boardPage", boardPage);
+
         //　リスト全てのをHTMLにわたす
-        List<Board> boards = boardService.getAllBoards();
-        model.addAttribute("boards",boards);
+        // List<Board> boards = boardService.getAllBoards();
+        // model.addAttribute("boards",boards);
         return "board/list";
     }
 
