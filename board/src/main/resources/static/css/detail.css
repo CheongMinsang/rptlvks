@@ -1,0 +1,77 @@
+body{
+    margin: 0;
+    padding: 20px;
+    background-color: #f0f0f0;
+}
+a {
+    color: blue;
+    text-decoration: none;
+}
+h1{
+    color:#333;
+}
+.board-detail{
+    padding: 20px;
+    max-width: 800px;
+}
+.board-info{
+    border-bottom: 1px solid;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+}
+.board-context{
+    /* 列の間隔 */
+    line-height: 1.8;
+    /* 最低の高さ */
+    min-height: 200px;
+    margin-bottom: 20px;
+}
+button, .button{
+    background-color: blue;
+    color: white;
+    text-decoration: none;
+    padding: 10px 20px;
+    border: none;
+    display: inline-block;
+    margin-right: 10px;
+}
+.button-delete {
+    background-color: red;
+}
+/* コメント関連CSS*/
+.comment-section{
+    margin-top: 30px;
+    border-top: 1px solid;
+    padding-top: 20px;
+}
+.comment-form{
+    padding: 15px;
+    margin-bottom: 20px;
+}
+.comment-form textarea{
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    resize: vertical;
+}
+.comment-list{
+    margin-top: 20px;
+}
+.comment-item{
+    border-bottom: 1px solid #eee;
+    padding: 15px;
+    margin-bottom: 10px;
+}
+.comment-header{
+    margin-bottom: 10px;
+    color: #666;
+    font-size: 0.9em;
+}
+.comment-content{
+    line-height: 1.6;
+    margin-bottom: 10px;
+}
+.comment-delete{
+    font-size: 0.8em;
+    padding: 5px 10px;
+}

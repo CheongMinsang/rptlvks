@@ -3,52 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <title>会員登録</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/main.css}">
     <style>
-        body{
-            margin: 0;
-            padding: 20px;
-            background-color: #f0f0f0;
-        }
-        h1{
-            color: #333;
-        }
-        form{
-            padding: 20px;
-            max-width: 400px;
-        }
-        label{
-            display:  block;
-            margin-bottom: 5px;
-        }
-        input{
-            width: 100%;
-            padding: 8px;
-            margin-bottom: 10px;
-            border: 1px solid #ccc;
-        }
-        button{
-            background-color: blue;
-            color: white;
-            padding: 10px;
-            border: none;
-        }
-        .error{
-            color: red;
-            margin-bottom: 10px;
-        }
-        #passwordError{
-            color: red;
-            font-size:0.9em;
-            margin-bottom: 10px;
-            /*PASSWORDが一致しない場合にだけ表示*/
-            display: none;
-        }
 
     </style>
 </head>
 <body>
-
+<a th:href="@{/}">
     <h1>会員登録</h1>
+</a>
     <div class="error" th:if="${error}" th:text="${error}"></div>
     <!-- Formを送る前にcheckPassword()関数を実行する、returnがtrueの時にのみFormを送る-->
     <form action="/signup" method="post" onsubmit="return checkPassword()">

@@ -1,8 +1,10 @@
 package com.example.board.controller;
 
 import com.example.board.entity.Board;
+import com.example.board.entity.Comment;
 import com.example.board.entity.User;
 import com.example.board.service.BoardService;
+import com.example.board.service.CommentService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -22,6 +24,8 @@ public class BoardController {
 
     //　BoardService使用
     private final BoardService boardService;
+    //  コメント機能のために使用する
+    private final CommentService commentService;
 
     //　掲示板リスト一覧(ページング追加)
     @GetMapping("/list")
@@ -75,7 +79,15 @@ public class BoardController {
         boardService.countViews(id);
         //　@PathVariable Long idでもらったid情報でDB検索
         Board board = boardService.getIdBoard(id);
+
+        //  コメントリストとコメント数を検索
+        List<Comment> comments = commentService.getCommentsByBoardId(id);
+        Long commentCount = commentService.getCommentCount(id);
+
         model.addAttribute("board",board);
+        model.addAttribute("comments", comments);
+        model.addAttribute("commentCount", commentCount);
+
         return "board/detail";
     }
     //　修正

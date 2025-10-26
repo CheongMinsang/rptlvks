@@ -3,30 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <title>掲示板</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/main.css}">
     <style>
-        body {
-            margin: 0;
-            padding: 20px;
-            background-color: #f0f0f0;
-        }
-        h1 {
-            color: #333;
-        }
-        ul｛
-            list-style: none;
-            margin: 0;
-            padding: 0;
-        }
-        li {
-            margin-bottom: 10px;
-        }
-        a {
-            color: blue;
-            text-decoration: none;
-        }
-        a:hover{
-            text-decoration: underline;
-        }
+
     </style>
 </head>
 <body>
@@ -37,7 +16,9 @@
             alert('会員登録が完了しました！');
         }
     </script>
+    <a th:href="@{/}">
     <h1>掲示板</h1>
+    </a>
         <!--　sessionがある時 -->
         <div th:if="${session.loginUser}">
             <P>ようこそ！、<strong th:text="${session.loginUser.username}"></strong>様</P>

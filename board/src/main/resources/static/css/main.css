@@ -1,0 +1,169 @@
+body {
+    margin: 0;
+    padding: 20px;
+    background-color: #f0f0f0;
+}
+
+h1 {
+    color: #333;
+}
+
+a {
+    color: blue;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+/* ========== ボタン ===== */
+button, .button {
+    background-color: blue;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    text-decoration: none;
+    display: inline-block;
+    margin-right: 10px;
+}
+.button-delete {
+    background-color: red;
+}
+
+/* ===== Form ===== */
+form {
+    padding: 20px;
+    max-width: 600px;
+}
+
+label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+input, textarea {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    background-color: #f9f9f9;
+}
+
+textarea {
+    height: 200px;
+    resize: vertical; /* 上下のみ大きさの調整ができる */
+}
+
+.error {
+    color: red;
+    margin-bottom: 10px;
+}
+
+#passwordError {
+    color: red;
+    font-size: 0.9em;
+    margin-bottom: 10px;
+    display: none; /* PASSWORDが合わない場合のみ表示 */
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+th, td {
+    border: 1px solid #ccc;
+    padding: 10px;
+    text-align: left;
+}
+
+.paging {
+    margin-top: 20px;
+    text-align: center;
+}
+.paging a, .paging span {
+    text-decoration: none;
+    padding: 8px 12px;
+    margin: 0 5px;
+    border: 1px solid #ccc;
+    color: #333;
+    display: inline-block;
+}
+.paging .active {
+    background-color: blue;
+    color: white;
+}
+.paging .disabled {
+    color: #ccc;
+}
+
+.board-detail {
+    padding: 20px;
+    max-width: 800px;
+}
+
+.board-info {
+    border-bottom: 1px solid #ccc;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+}
+
+.board-context {
+    line-height: 1.8;
+    min-height: 200px;
+    margin-bottom: 20px;
+}
+
+/* ===== コメント ===== */
+.comment-section {
+    margin-top: 30px;
+    border-top: 1px solid #ccc;
+    padding-top: 20px;
+}
+
+.comment-form {
+    padding: 15px;
+    margin-bottom: 20px;
+}
+.comment-form textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    resize: vertical;
+}
+
+.comment-list {
+    margin-top: 20px;
+}
+
+.comment-item {
+    border-bottom: 1px solid #eee;
+    padding: 15px;
+    margin-bottom: 10px;
+}
+
+.comment-header {
+    margin-bottom: 10px;
+    color: #666;
+    font-size: 0.9em;
+}
+
+.comment-content {
+    line-height: 1.6;
+    margin-bottom: 10px;
+}
+
+.comment-delete {
+    font-size: 0.8em;
+    padding: 5px 10px;
+}
+
+ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+li {
+    margin-bottom: 10px;
+}

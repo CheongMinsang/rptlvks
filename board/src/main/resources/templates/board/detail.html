@@ -3,51 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <title>掲示板詳細</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/main.css}">
     <style>
-        body{
-            margin: 0;
-            padding: 20px;
-            background-color: #f0f0f0;
-        }
-        a {
-            color: blue;
-            text-decoration: none;
-        }
-        h1{
-            color:#333;
-        }
-        .board-detail{
-            padding: 20px;
-            max-width: 800px;
-        }
-        .board-info{
-            border-bottom: 1px solid;
-            margin-bottom: 20px;
-            padding-bottom: 10px;
-        }
-        .board-context{
-            /* 列の間隔 */
-            line-height: 1.8;
-            /* 最低の高さ */
-            min-height: 200px;
-            margin-bottom: 20px;
-        }
-        button, .button{
-            background-color: blue;
-            color: white;
-            text-decoration: none;
-            padding: 10px 20px;
-            border: none;
-            display: inline-block;
-            margin-right: 10px;
-        }
-        .button-delete {
-            background-color: red;
-        }
+
     </style>
 </head>
 <body>
-<h1 th:text="${board.title}"></h1>
+<a th:href="@{/}">
+    <h1 th:text="${board.title}"></h1>
+</a>
 
 <div class="board-detail">
 
@@ -77,6 +41,42 @@
             </form>
         </div>
         <a href="/board/list">リストに戻る</a>
+    </div>
+
+    <div class="comment-section">
+        <h3>コメント ([[${commentCount}]])</h3>
+        <div class="comment-form" th:if="${session.loginUser}">
+            <form action="/comment/create" method="post">
+                <input type="hidden" name="boardId" th:value="${board.id}">
+                <textarea name="content"
+                        rows="3" placeholder="コメントを入力してください！！"
+                        required></textarea>
+                <div style="margin-top: 10px;">
+                    <button type="submit">コメントを作成</button>
+                </div>
+            </form>
+        </div>
+        <div class="comment-list">
+            <div class="comment-item" th:each="comment : ${comments}">
+                <div class="comment-header">
+                    <strong th:text="${comment.user.username}"></strong>
+                    <span th:text="${#temporals.format(comment.createdAt, 'yyyy-MM-dd HH:mm')}"></span>
+                </div>
+                <div class="comment-content">
+                    <p th:text="${comment.content}"></p>
+                </div>
+                <div th:if="${session.loginUser != null and session.loginUser.id == comment.user.id}">
+                    <form th:action="@{/comment/delete/{commentId}(commentId=${comment.id})}"
+                            method="post" style="display: inline" onsubmit="return confirm('本当に削除しますか？')">
+                        <input type="hidden" name="boardId" th:value="${board.id}">
+                        <button type="submit" class="button comment-delete">削除</button>
+                    </form>
+                </div>
+                <div th:if="${#lists.isEmpty(comments)}" style="text-align: center; padding: 20px; color: #999;">
+                    コメントがありません！
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 </body>
