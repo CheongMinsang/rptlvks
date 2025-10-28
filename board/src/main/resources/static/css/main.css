@@ -167,3 +167,25 @@ ul {
 li {
     margin-bottom: 10px;
 }
+/* 検索　*/
+.search-form{
+    padding: 15px;
+    margin-bottom: 20px;
+}
+.search-form select{
+    padding: 8px;
+    border: 1px solid #ccc;
+    margin-right: 10px;
+}
+.search-form input[type="text"]{
+    padding: 8px;
+    border: 1px solid #ccc;
+    width: 300px;
+    margin-right: 10px;
+}
+.search-form button{
+    background-color: green;
+    color: white;
+    padding: 8px 15px;
+    border: none;
+}

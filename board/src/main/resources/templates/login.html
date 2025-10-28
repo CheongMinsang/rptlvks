@@ -9,6 +9,16 @@
     </style>
 </head>
 <body>
+<script th:inline="javascript">
+    var errorMsg = /*[[${error}]]*/ null;
+    var successMsg = /*[[${success}]]*/ null;
+    if (errorMsg){
+        alert(errorMsg);
+    }
+    if (successMsg){
+        alert(successMsg);
+    }
+</script>
 <a th:href="@{/}">
     <h1>ログイン</h1>
 </a>

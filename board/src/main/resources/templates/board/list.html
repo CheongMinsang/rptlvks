@@ -9,12 +9,49 @@
     </style>
 </head>
 <body>
+<script th:inline="javascript">
+    var errorMsg = /*[[${error}]]*/ null;
+    var successMsg = /*[[${success}]]*/ null;
+    if (errorMsg){
+        alert(errorMsg);
+    }
+    if (successMsg){
+        alert(successMsg);
+    }
+</script>
 <a th:href="@{/}">
     <h1>掲示板リスト</h1>
 </a>
     <div th:if="${session.loginUser}">
         <a href="/board/write" class="button">作成</a>
     </div>
+
+    <!-- 検索　-->
+    <div class="search-form">
+        <form action="/board/list" method="get">
+            <select name="type">
+                <option value="all" th:selected="${type == 'all'}">全体</option>
+                <option value="title" th:selected="${type == 'title'}">タイトル</option>
+                <option value="content" th:selected="${type == 'content'}">内容</option>
+            </select>
+            <!-- 検索keyword入力　-->
+            <input type="text" name="keyword" th:value="${keyword}"
+                   placeholder="検索キーワードを入力してください！！">
+            <!-- 検索ボタン　-->
+            <button type="submit">検索</button>
+            <!-- 取り消しボタン　-->
+            <a th:if="${!keyword.isEmpty()}" href="/board/list" style="margin-left:10px; color: #666;">リセット</a>
+        </form>
+    </div>
+
+    <!--　検索結果 -->
+    <!--　keywordを入力した場合　-->
+    <div th:if="${!keyword.isEmpty()}" style="margin-bottom: 10px; color: #666;">
+        <!-- 結果したkeywordと検索結果の数を表示　-->
+        "<span th:text="${keyword}"></span>" の検索結果:
+        <strong th:text="${boardPage.totalElements}"></strong>件
+    </div>
+
     <table>
         <thead>
             <tr>
@@ -40,16 +77,20 @@
             <!-- 掲示板に何もない場合　-->
             <tr th:if="${boardPage.totalElements == 0}">
                 <td colspan="5" style="text-align: center;">
-                    作成した物がございません、一番最初の掲示文を作成してみてください！
+                    <!-- 検索機能関連追加　-->
+                    <!-- keywordがある場合といない場合　-->
+                    <span th:if="${!keyword.isEmpty()}">検索結果がありません。</span>
+                    <span th:if="${keyword.isEmpty()}">作成した物がございません、一番最初の掲示文を作成してみてください！</span>
                 </td>
             </tr>
         </tbody>
     </table>
     <!-- １ページ以上ある場合　-->
     <div class="paging" th:if="${boardPage.totalPages > 0}">
-        <!-- 前のページがある場合-->
+        <!-- 前のページがある場合　-->
+        <!-- 検索keyword維持　-->
         <a th:if="${boardPage.hasPrevious()}"
-            th:href="@{/board/list(page=${boardPage.number - 1 })}">
+            th:href="@{/board/list(page=${boardPage.number - 1 }, keyword=${keyword}, type=${type})}">
             <-　前
         </a>
         <!-- 前のページがない場合　-->
@@ -60,16 +101,18 @@
 
         <!-- ページの番号ボタン　-->
         <!-- ０から全体ページナンバー-1までの数字を生成　-->
+        <!-- 検索keyword維持　-->
         <a th:each="i : ${#numbers.sequence(0, boardPage.totalPages - 1)}"
-           th:href="${i == boardPage.number} ? '#' : @{/board/list(page=${i})}"
+           th:href="${i == boardPage.number} ? '#' : @{/board/list(page=${i}, keyword=${keyword}, type=${type})}"
            th:classappend="${i == boardPage.number} ? 'active'"
            th:text="${i + 1}">
         </a>
 
         <!-- 次のページのボタン　-->
         <!-- hasNext() = 現在ページが最後のページより少ない場合true -->
+        <!-- 検索keyword維持　-->
         <a th:if="${boardPage.hasNext()}"
-            th:href="@{/board/list(page=${boardPage.number + 1})}">
+            th:href="@{/board/list(page=${boardPage.number + 1}, keyword=${keyword}, type=${type})}">
             次　->
         </a>
 

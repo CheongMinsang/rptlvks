@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 //　WebRequest処理アノテーション
 @Controller
@@ -27,12 +28,13 @@ public class CommentController {
     @PostMapping("/create")
     public String createComment(@RequestParam Long boardId,
                                 @RequestParam String content,
-                                HttpSession session){
+                                HttpSession session,
+                                RedirectAttributes redirectAttributes){
         //　ログイン確認
         User loginUser = (User) session.getAttribute("loginUser");
         //　ロジックをしてない場合
         if(loginUser == null){
-            //　後でalert追加("ログインが必要な機能です！！")
+            redirectAttributes.addFlashAttribute("error", "ログインが必要です!!");
             return "redirect:/login";
         }
 
@@ -48,23 +50,25 @@ public class CommentController {
     @PostMapping("/delete/{commentId}")
     public String deleteComment(@PathVariable Long commentId,
                                 @RequestParam Long boardId,
-                                HttpSession session){
+                                HttpSession session,
+                                RedirectAttributes redirectAttributes){
         //　ログイン確認
         User loginUser = (User) session.getAttribute("loginUser");
         //　ロジックをしてない場合
         if(loginUser == null){
-            //　後でalert追加("ログインが必要な機能です！！")
+            redirectAttributes.addFlashAttribute("error", "ログインが必要です!!");
             return "redirect:/login";
         }
         //　作成したコメントを検索
         Comment comment = commentService.getCommentById(commentId);
         //　コメントの作成者とロジックした人が違う場合
         if (!comment.getUser().getId().equals(loginUser.getId())){
-            //　後でalert追加("自分が作成したコメントのみ削除可能です！！")
+            redirectAttributes.addFlashAttribute("error", "自分が作成したコメントのみ削除可能です！！");
             return "redirect:/board/" + boardId;
         }
         //　コメントを削除
         commentService.deleteComment(commentId);
+        redirectAttributes.addFlashAttribute("success", "コメントを削除しました!");
         //　コメントを削除した掲示文の詳細ページに移動
         return "redirect:/board/" + boardId;
     }

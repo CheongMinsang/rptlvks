@@ -26,4 +26,12 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
     //　findAll: extends JpaRepositoryで使用
     //　
     Page<Board> findAllByOrderByCreatedAtDesc(Pageable pageable);
+    // 検索メソッド
+    // タイトルに含まれるkeywordを検索
+    Page<Board> findByTitleContainingOrderByCreatedAtDesc(String keyword, Pageable pageable);
+    // 内容に含まれるkeywordで検索
+    Page<Board> findByContextContainingOrderByCreatedAtDesc(String keyword, Pageable pageable);
+    //  タイトルまたは内容のkeywordで検索
+    Page<Board> findByTitleContainingOrContextContainingOrderByCreatedAtDesc(String titleKeyword, String contentKeyword, Pageable pageable);
+
 }

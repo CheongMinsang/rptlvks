@@ -82,4 +82,38 @@ public class BoardService {
         board.setViews(board.getViews() + 1);
         boardRepository.save(board);
     }
+
+    // 検索メソッド
+    //　タイトルで検索
+    public Page<Board> searchByTitle(String keyword, int page, int size){
+        // ページング情報生成
+        // page = ページNo、size = 1ページの掲示文の数
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt"));
+        //　タイトルのkeywordのみで検索
+        return boardRepository.findByTitleContainingOrderByCreatedAtDesc(keyword, pageable);
+    }
+    //　内容で検索
+    public Page<Board> searchByContent(String keyword, int page, int size){
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt"));
+        // 内容のkeywordのみで検索
+        return boardRepository.findByContextContainingOrderByCreatedAtDesc(keyword, pageable);
+    }
+    //　タイトルまたは内容でのkeywordで検索
+    public Page<Board> searchByTitleOrContent(String keyword, String type, int page, int size){
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt"));
+        //　検索条件(type)の選択によって違う検索方法を使用
+        switch (type){
+            //　タイトル
+            case "title":
+                return boardRepository.findByTitleContainingOrderByCreatedAtDesc(keyword, pageable);
+            //　内容
+            case "content":
+                return boardRepository.findByContextContainingOrderByCreatedAtDesc(keyword, pageable);
+            //　タイトルまたは内容
+            case "all":
+            default:
+                //　タイトルと内容で検索するためにkeywordを2回渡す
+                return boardRepository.findByTitleContainingOrContextContainingOrderByCreatedAtDesc(keyword, keyword, pageable);
+        }
+    }
 }
