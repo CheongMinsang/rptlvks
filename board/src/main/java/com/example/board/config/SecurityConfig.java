@@ -44,5 +44,10 @@ public class SecurityConfig {
 
         return http.build();
     }
+    // パスワード暗号化
+    @Bean
+    public PasswordEncoder passwordEncoder(){
+        return new BCryptPasswordEncoder();
+    }
 }
 
