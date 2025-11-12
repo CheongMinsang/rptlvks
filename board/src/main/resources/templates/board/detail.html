@@ -37,17 +37,57 @@
         <p th:text="${board.context}"></p>
     </div>
 
+    <!--　添付ファイル　リスト　-->
+    <div class="file-section" th:if="${!#lists.isEmpty(files)}">
+        <h4>📎 添付ファイル ([[${#lists.size(files)}]]個)</h4>
+
+        <div class="file-list">
+            <!-- ファイルリストを繰り返す -->
+            <div class="file-item" th:each="file : ${files}">
+                <!-- ファイルアイコン -->
+                <span class="file-icon">
+                    <span th:if="${file.fileType.startsWith('image')}">🖼️</span>
+                    <span th:if="${file.fileType == 'application/pdf'}">📄</span>
+                    <span th:unless="${file.fileType.startsWith('image') or file.fileType == 'application/pdf'}">📁</span>
+                </span>
+
+                <!-- ファイル名とダウンロードリンク -->
+                <a th:href="@{/file/download/{fileId}(fileId=${file.id})}"
+                    th:text="${file.oriFileName}"
+                    class="file-link">
+                </a>
+
+                <!-- ファイルの容量表示 -->
+                <span class="file-size">
+                    ([[${#numbers.formatDecimal(file.fileSize / 1024, 1, 1)}]] KB)
+                </span>
+
+                <!-- ファイル削除ボタン -->
+                <div th:if="${session.loginUser != null and session.loginUser.id == board.user.id}"
+                    style="display: inline;">
+                    <form th:action="@{/file/delete/{fileId}(fileId=${file.id})}"
+                            method="post"
+                            style="display: inline;"
+                            onsubmit="return confirm('このファイルを削除しますか？');">
+                        <input type="hidden" name="boardId" th:value="${board.id}">
+                        <button type="submit" class="file-delete-btn">❌</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div>
         <!-- session確認 -->
         <div th:if="${session.loginUser != null and session.loginUser.id == board.user.id}">
             <!-- 修正 -->
-            <a th:href="@{/board/{id}/edit(id=${board.id})}" class="button">修正</a>
+            <button type="button" class="button" th:onclick="'location.href=\'' + @{/board/{id}/edit(id=${board.id})} + '\''">修正</button>
             <!-- 削除 -->
             <form th:action="@{/board/{id}/delete(id=${board.id})}"
                   method="post"
                   style="display: inline;"
                   onsubmit="return confirm('本当に削除しますか?');">
-                <button type="submit" class="button .button-delete">削除</button>
+                <button type="submit" class="button button-delete">削除</button>
             </form>
         </div>
         <a href="/board/list">リストに戻る</a>

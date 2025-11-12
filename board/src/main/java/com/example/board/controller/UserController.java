@@ -40,7 +40,7 @@ public class UserController {
             return "redirect:/?success=signup";
         //　Error処理
         }catch (IllegalArgumentException e){
-            model.addAttribute("申し訳ございません、不可能な要請です、再度確認してください",e.getMessage());
+            model.addAttribute("errorMessage",e.getMessage());
             //　また会員登録ページへ
             return "signup";
         }

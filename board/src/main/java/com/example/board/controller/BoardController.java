@@ -5,6 +5,10 @@ import com.example.board.entity.Comment;
 import com.example.board.entity.User;
 import com.example.board.service.BoardService;
 import com.example.board.service.CommentService;
+import com.example.board.entity.File;
+import com.example.board.service.FileService;
+import org.springframework.web.multipart.MultipartFile;
+import java.io.IOException;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -27,6 +31,8 @@ public class BoardController {
     private final BoardService boardService;
     //  コメント機能のために使用する
     private final CommentService commentService;
+    // ファイルアップロード追加
+    private final FileService fileService;
 
     //　掲示板リスト一覧(ページング追加,検索機能追加)
     @GetMapping("/list")
@@ -79,6 +85,7 @@ public class BoardController {
     @PostMapping("/write")
     public String write(@RequestParam String title,
                         @RequestParam String context,
+                        @RequestParam(value = "files", required = false) List<MultipartFile> files,
                         HttpSession session,
                         RedirectAttributes redirectAttributes){
         User loginUser = (User)session.getAttribute("loginUser");
@@ -86,8 +93,26 @@ public class BoardController {
             redirectAttributes.addFlashAttribute("error","ログインが必要です！！");
             return "redirect:/login";
         }
-        //　作成
-        boardService.createBoard(title, context, loginUser);
+
+        Board board = boardService.createBoard(title, context, loginUser);
+
+        // ファイルアップロード追加
+        //　実際にデータを持っているデータをセーブ
+        if (files != null && !files.isEmpty()){
+            for (MultipartFile file : files){
+                //　ファイルが選択された場合
+                if (!file.isEmpty()){
+                    try {
+                        //　ファイルセーブ
+                        fileService.saveFile(file, board);
+                    } catch (IOException e) {
+                        //　失敗した場合
+                        redirectAttributes.addFlashAttribute("error", "ファイルアップロードに失敗しました!");
+                    }
+                }
+            }
+        }
+
         return "redirect:/board/list";
     }
 
@@ -103,9 +128,14 @@ public class BoardController {
         List<Comment> comments = commentService.getCommentsByBoardId(id);
         Long commentCount = commentService.getCommentCount(id);
 
+        //　ファイルリストを追加
+        List<File> files=  fileService.getFilesByBoardId(id);
+
         model.addAttribute("board",board);
         model.addAttribute("comments", comments);
         model.addAttribute("commentCount", commentCount);
+        model.addAttribute("files", files);
+
         return "board/detail";
     }
     //　修正

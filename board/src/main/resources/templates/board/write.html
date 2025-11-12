@@ -12,11 +12,16 @@
 <a th:href="@{/}">
     <h1>掲示板作成</h1>
 </a>
-    <form action="/board/write" method="post">
+    <form action="/board/write" method="post" enctype="multipart/form-data">
         <label>タイトル:</label>
             <input type="text" name="title" required>
         <label>本文:</label>
             <textarea name="context" required></textarea>
+        <label>ファイル添付(最大5個):</label>
+            <input type="file" name="files" multiple accept="image/*,application/pdf,.doc,.docx,.xls,.xlsx,.txt">
+            <small style="color: #666; display: block; margin-bottom: 10px;">
+                * イメージ、　PDF、　Word、　Excel、　TXTファイル　アップロード可能(ファイルごとに最大10MB)
+            </small>
         <div>
             <button type="submit">作成</button>
             <button type="button" onclick="history.back()">キャンセル</button>
