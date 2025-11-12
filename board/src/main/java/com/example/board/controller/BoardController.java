@@ -94,50 +94,83 @@ public class BoardController {
             return "redirect:/login";
         }
 
-        Board board = boardService.createBoard(title, context, loginUser);
+        try {
+            Board board = boardService.createBoard(title, context, loginUser);
+            System.out.println("掲示板生成完了！" + board.getId());
 
-        // ファイルアップロード追加
-        //　実際にデータを持っているデータをセーブ
-        if (files != null && !files.isEmpty()){
-            for (MultipartFile file : files){
-                //　ファイルが選択された場合
-                if (!file.isEmpty()){
-                    try {
-                        //　ファイルセーブ
-                        fileService.saveFile(file, board);
-                    } catch (IOException e) {
-                        //　失敗した場合
-                        redirectAttributes.addFlashAttribute("error", "ファイルアップロードに失敗しました!");
+
+            // ファイルアップロード追加
+            //　実際にデータを持っているデータをセーブ
+            if (files != null && !files.isEmpty()) {
+                System.out.println("ファイル数" + files.size());
+
+                for (MultipartFile file : files) {
+                    //　ファイルが選択された場合
+                    if (!file.isEmpty()) {
+                        System.out.println("ファイルアップロードテスト:" + files.size());
+
+                        try {
+                            //　ファイルセーブ
+                            fileService.saveFile(file, board);
+                            System.out.println("ファイルセーブ完了" + files.size());
+                        } catch (IOException e) {
+                            System.out.println("ファイルセーブ失敗" + e.getMessage());
+                            e.printStackTrace();
+                            //　失敗した場合
+                            redirectAttributes.addFlashAttribute("error", "ファイルアップロードに失敗しました!"
+                            + file.getOriginalFilename());
+                        } catch (Exception e) { // ⬅️ 추가
+                            System.err.println("FATAL ERROR during file upload loop: " + e.getMessage());
+                            e.printStackTrace();
+                            redirectAttributes.addFlashAttribute("error", "치명적인 파일 업로드 오류 발생!");
+                        }
                     }
                 }
             }
-        }
 
-        return "redirect:/board/list";
+            redirectAttributes.addFlashAttribute("success", "掲示板を作成しました。");
+            return "redirect:/board/list";
+
+        } catch (Exception e) {
+            System.err.println("掲示板削除失敗！" + e.getMessage());
+            e.printStackTrace();
+            redirectAttributes.addFlashAttribute("error","掲示板作成に失敗しました!");
+            return "redirect:/board/write";
+        }
     }
 
     //　詳細なページみる
     @GetMapping("/{id}")
-    public String boardDetail(@PathVariable Long id, Model model){
-        //　クリック数アップ
-        boardService.countViews(id);
-        //　@PathVariable Long idでもらったid情報でDB検索
-        Board board = boardService.getIdBoard(id);
+    public String boardDetail(@PathVariable Long id, Model model) {
+        try {
+            //　クリック数アップ
+            boardService.countViews(id);
+            //　@PathVariable Long idでもらったid情報でDB検索
+            Board board = boardService.getIdBoard(id);
+            System.out.println("掲示板検索" + board.getId());
 
-        //  コメントリストとコメント数を検索
-        List<Comment> comments = commentService.getCommentsByBoardId(id);
-        Long commentCount = commentService.getCommentCount(id);
+            //  コメントリストとコメント数を検索
+            List<Comment> comments = commentService.getCommentsByBoardId(id);
+            Long commentCount = commentService.getCommentCount(id);
 
-        //　ファイルリストを追加
-        List<File> files=  fileService.getFilesByBoardId(id);
+            //　ファイルリストを追加
+            List<File> files = fileService.getFilesByBoardId(id);
+            System.out.println("ファイル数" + files.size());
 
-        model.addAttribute("board",board);
-        model.addAttribute("comments", comments);
-        model.addAttribute("commentCount", commentCount);
-        model.addAttribute("files", files);
+            model.addAttribute("board", board);
+            model.addAttribute("comments", comments);
+            model.addAttribute("commentCount", commentCount);
+            model.addAttribute("files", files);
 
-        return "board/detail";
+            return "board/detail";
+
+        } catch (Exception e) {
+            System.err.println("詳細ページを見るのに失敗しました" + e.getMessage());
+            e.printStackTrace();
+            return "redirect:/board/list";
+        }
     }
+
     //　修正
     @GetMapping("/{id}/edit")
     public String editForm(@PathVariable Long id, Model model, HttpSession session,

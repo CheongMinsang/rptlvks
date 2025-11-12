@@ -32,26 +32,56 @@ public class FileService {
     @Transactional
     public File saveFile(MultipartFile file, Board board) throws IOException {
 
+        System.out.println("!!!! SERVICE METHOD INITIATED !!!!");
+        System.out.println("===　ファイルセーブスタート　===");
+        System.out.println("アップロードpath　:　" + uploadDirectory);
+        System.out.println("原本ファイル名 : " + file.getOriginalFilename());
+        System.out.println("ファイル容量 : " + file.getSize());
+
+        if (uploadDirectory == null) {
+            System.err.println("❌ ERROR: uploadDirectory is NULL!");
+            throw new RuntimeException("Upload directory not configured.");
+        }
+
         // アップロードdirectory生成
         java.io.File uploadDIr = new java.io.File(uploadDirectory);
+        System.out.println("ファイル経路 : " + uploadDIr.getAbsolutePath());
 
         //　フォルダが存在しない場合
         if (!uploadDIr.exists()){
-            uploadDIr.mkdirs();
+            boolean created = uploadDIr.mkdirs();
+            System.out.println("Directory生成 : " + created);
+
+            if (!created){
+                throw new IOException("Directoryを生成できませんでした:" + uploadDIr.getAbsolutePath());
+            }
+        } else {
+            System.out.println("Directoryが既に存在しております！");
         }
 
         //　原本ファイル名
         String oriFileName = file.getOriginalFilename();
+        if (oriFileName == null || oriFileName.isEmpty()) {
+            throw new IOException("ファイル名がいないです");
+        }
 
         //　セーブするファイル名生成
         String savedFileName = createSavedFileName(oriFileName);
+        System.out.println("セーブするファイル名: " + savedFileName);
 
         //　セーブ経路生成
         String filePath = uploadDirectory + java.io.File.separator + savedFileName;
+        System.out.println("セーブするファイル経路: " + filePath);
 
         //　ファイルセーブ
-        Path path = Paths.get(filePath);
-        Files.write(path, file.getBytes());
+        try {
+            Path path = Paths.get(filePath);
+            Files.write(path, file.getBytes());
+            System.out.println("ファイルセーブ完了！！");
+        } catch (IOException e){
+            System.err.println("ファイルセーブに失敗！！" + e.getMessage());
+            throw e;
+        }
 
         File fileEntity = new File();
         fileEntity.setOriFileName(oriFileName);
@@ -61,7 +91,11 @@ public class FileService {
         fileEntity.setFileType(file.getContentType());
         fileEntity.setBoard(board);
 
-        return fileRepository.save(fileEntity);
+        File saved = fileRepository.save(fileEntity);
+        System.out.println("DB セーブ完了: ID=" + saved.getId());
+        System.out.println("=== ファイルセーブ終了 ===");
+
+        return saved;
     }
 
     //　セーブするファイル名生成
@@ -81,6 +115,7 @@ public class FileService {
     //　ファイル削除
     @Transactional
     public void deleteFile(Long fileId) throws IOException{
+
         //　ファイル情報検索
         File fileEntity = fileRepository.findById(fileId).orElseThrow(() -> new IllegalArgumentException("ファイルが見つかりません。"));
 

@@ -16,6 +16,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
@@ -45,17 +47,26 @@ public class FileController {
                 throw new RuntimeException("ファイルを読み取れません。");
             }
 
+            // ファイル名エンコーディング
+            String encodedFileName = URLEncoder.encode(
+                    fileEntity.getOriFileName(),
+                    StandardCharsets.UTF_8
+            ).replace("+", "%20");
+
             //　HTTPresponseヘッダー設定
-            String contentDisposition = "attachment; filename=\"" + fileEntity.getOriFileName() + "\"";
+            String contentDisposition = "attachment; filename*=UTF-8''" + encodedFileName;
 
             //　responseEntity生成とリターン
             return ResponseEntity.ok()
                     .header(HttpHeaders.CONTENT_DISPOSITION, contentDisposition)
+                    .header(HttpHeaders.CONTENT_TYPE, fileEntity.getFileType())
                     .body(resource);
 
         } catch (MalformedURLException e) {
             //　ファイル経路Error
             throw new RuntimeException("ファイルパスエラー", e);
+        } catch (Exception e){
+            throw new RuntimeException("ファイルダウンロードエラー", e);
         }
     }
 
