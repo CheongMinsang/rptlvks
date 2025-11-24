@@ -32,14 +32,13 @@ public class FileService {
     @Transactional
     public File saveFile(MultipartFile file, Board board) throws IOException {
 
-        System.out.println("!!!! SERVICE METHOD INITIATED !!!!");
         System.out.println("===　ファイルセーブスタート　===");
         System.out.println("アップロードpath　:　" + uploadDirectory);
         System.out.println("原本ファイル名 : " + file.getOriginalFilename());
         System.out.println("ファイル容量 : " + file.getSize());
 
         if (uploadDirectory == null) {
-            System.err.println("❌ ERROR: uploadDirectory is NULL!");
+            System.err.println("エラー: uploadDirectory is NULL!");
             throw new RuntimeException("Upload directory not configured.");
         }
 
