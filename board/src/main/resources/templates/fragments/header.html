@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<nav th:fragment="headerMenu" class="navbar navbar-expand-lg navbar-light bg-light border-bottom">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="/">ホーム</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link" href="/board/list">掲示板リスト</a>
+                </li>
+            </ul>
+
+            <div class="d-flex align-items-center">
+                <div th:if="${session.loginUser}" class="d-flex align-items-center gap-2">
+                        <span class="me-2">
+                            ようこそ！ <strong th:text="${session.loginUser.username}"></strong> 様
+                        </span>
+                    <a href="/logout" class="btn btn-outline-danger btn-sm">ログアウト</a>
+                </div>
+                <div th:if="${session.loginUser == null}" class="d-flex gap-2">
+                    <a href="/login" class="btn btn-outline-primary btn-sm">ログイン</a>
+                    <a href="/signup" class="btn btn-primary btn-sm">会員登録</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
+
+</body>
+</html>

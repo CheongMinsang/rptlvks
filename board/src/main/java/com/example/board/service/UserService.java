@@ -27,6 +27,7 @@ public class UserService {
     @Transactional
     public User signup(String username, String password, String email){
 
+        //重複検査
         if(userRepository.existsByUsername(username)){
             throw new IllegalArgumentException("使用中のIDです他のIDを入力してください。");
         }
@@ -34,6 +35,7 @@ public class UserService {
         User user =  new User();
         user.setUsername(username);
 
+        //パスワード暗号化
         String encodingPassword = passwordEncoder.encode(password);
         user.setPassword(encodingPassword);
 
@@ -41,11 +43,6 @@ public class UserService {
         user.setEmail(email);
 
         return userRepository.save(user);
-    }
-
-    //　ID重複検査用
-    public boolean usernameCheck(String username){
-        return userRepository.existsByUsername(username);
     }
 
     // ログイン

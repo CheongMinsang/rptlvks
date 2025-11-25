@@ -17,5 +17,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findByUsername(String username);
     // データベースにusernameが存在するか否かを確認する
     // SELECT COUNT(*) FROM users WHERE usernameと同じ役割
+    // 重複検査用
     boolean existsByUsername(String username);
 }

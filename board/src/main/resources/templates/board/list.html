@@ -22,9 +22,6 @@
 <a th:href="@{/}">
     <h1>掲示板リスト</h1>
 </a>
-    <div th:if="${session.loginUser}">
-        <a href="/board/write" class="button">作成</a>
-    </div>
 
     <!-- 検索　-->
     <div class="search-form">
@@ -121,7 +118,14 @@
             次　->
         </span>
     </div>
+<div style="margin-top: 30px;" th:if="${session.loginUser}">
+    <a href="/board/write" class="button">作成</a>
+    <a href="/" class="button">ホーム</a>
+</div>
+<div style="margin-top: 30px;" th:unless="${session.loginUser}">
+    <a href="/login" class="button">ログイン</a>
+    <a href="/" class="button">ホーム</a>
+</div>
 
-    <a href="/">ホームに戻る</a>
 </body>
 </html>

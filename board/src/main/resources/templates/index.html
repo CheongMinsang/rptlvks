@@ -17,26 +17,28 @@
         }
     </script>
     <a th:href="@{/}">
-    <h1>掲示板</h1>
-    </a>
-        <!--　sessionがある時 -->
-        <div th:if="${session.loginUser}">
-            <P>ようこそ！、<strong th:text="${session.loginUser.username}"></strong>様</P>
-            <a href="/logout">ログアウト</a>
-        </div>
-        <!-- sessionがない時　-->
-        <div th:if="${session.loginUser == null}">
-            <p>
-                <a href="/login">ログイン</a>
-                <a href="/signup">会員登録</a>
-            </p>
-        </div>
-
+        <h1>掲示板</h1>
+        </a>
     <p>掲示板作成サイトです！</p>
+    <!-- sessionいる時　-->
+    <div th:if="${session.loginUser}">
+            <P>ようこそ！、<strong th:text="${session.loginUser.username}"></strong>様</P>
+            <a href="/logout" class="button">ログアウト</a>
+    </div>
+        <!-- sessionがない時　-->
+    <div th:if="${session.loginUser == null}">
+        <p>
+            <a href="/login" class="button">ログイン</a>
+            <a href="/signup" class="button">会員登録</a>
+        </p>
+    </div>
+
     <hr>
+
     <h2>メニュー</h2>
+
     <ul>
-        <li><a href="/board/list">掲示板リスト</a></li>
+        <li><a href="/board/list" class="button">リスト</a></li>
     </ul>
 </body>
 </html>
