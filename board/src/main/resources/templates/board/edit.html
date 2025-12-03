@@ -12,23 +12,24 @@
 <a th:href="@{/}">
     <h1>掲示板修正</h1>
 </a>
-<!-- 修正Form -->
-<form th:action="@{/board/{id}/edit(id=${board.id})}" method="post">
-    <!-- タイトル　-->
-    <label>タイトル:</label>
-    <!-- th:value="${board.title}": 本来のタイトル -->
-        <input type="text" name="title" th:value="${board.title}" required>
+    <!-- 修正Form -->
+    <form th:action="@{/board/{id}/edit(id=${board.id})}" method="post">
+        <!-- タイトル　-->
+        <label>タイトル:</label>
+        <!-- th:value="${board.title}": 本来のタイトル -->
+            <input type="text" name="title" th:value="${board.title}" required>
 
-    <!-- 本文 -->
-    <label>本文:</label>
-    <!-- 本来の本文 -->
-    <textarea name="context" required th:text="${board.context}"></textarea>
+        <!-- 本文 -->
+        <label>本文:</label>
+        <!-- 本来の本文 -->
+        <textarea name="context" required th:text="${board.context}"></textarea>
 
-    <div>
-        <!-- Form提出 -->
-        <button type="submit">修正</button>
-        <button type="button" onclick="history.back()">キャンセル</button>
-    </div>
-</form>
+
+        <div>
+            <!-- Form提出 -->
+            <button type="submit">修正</button>
+            <button type="button" onclick="history.back()">キャンセル</button>
+        </div>
+    </form>
 </body>
 </html>

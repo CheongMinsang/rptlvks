@@ -100,9 +100,9 @@
         <!-- ０から全体ページナンバー-1までの数字を生成　-->
         <!-- 検索keyword維持　-->
         <a th:each="i : ${#numbers.sequence(0, boardPage.totalPages - 1)}"
-           th:href="${i == boardPage.number} ? '#' : @{/board/list(page=${i}, keyword=${keyword}, type=${type})}"
-           th:classappend="${i == boardPage.number} ? 'active'"
-           th:text="${i + 1}">
+               th:href="${i == boardPage.number} ? '#' : @{/board/list(page=${i}, keyword=${keyword}, type=${type})}"
+               th:classappend="${i == boardPage.number} ? 'active'"
+               th:text="${i + 1}">
         </a>
 
         <!-- 次のページのボタン　-->

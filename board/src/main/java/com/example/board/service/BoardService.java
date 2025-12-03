@@ -30,7 +30,7 @@ public class BoardService {
     }
 
     //　ページングメソッド
-    // int page = ページの番号　int size = 一ページに見れる作成文の数
+    // int page = ページの番号　int size = 一ページごとに見れる作成文の数
     public Page<Board> getBoardsWithPaging(int page, int size) {
         //　PageRequest.of()　＝　ページング情報生成
         //　Sort.Direction.DESC　＝　降順

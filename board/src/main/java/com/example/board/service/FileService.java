@@ -61,7 +61,7 @@ public class FileService {
         //　原本ファイル名
         String oriFileName = file.getOriginalFilename();
         if (oriFileName == null || oriFileName.isEmpty()) {
-            throw new IOException("ファイル名がいないです");
+            throw new IOException("ファイルが存在しません！");
         }
 
         //　セーブするファイル名生成
@@ -69,6 +69,7 @@ public class FileService {
         System.out.println("セーブするファイル名: " + savedFileName);
 
         //　セーブ経路生成
+        // java.io.File.separator:OSによるファイル経路を区切り文字を生成
         String filePath = uploadDirectory + java.io.File.separator + savedFileName;
         System.out.println("セーブするファイル経路: " + filePath);
 
@@ -82,6 +83,7 @@ public class FileService {
             throw e;
         }
 
+        //DBにセーブ
         File fileEntity = new File();
         fileEntity.setOriFileName(oriFileName);
         fileEntity.setSavedFileName(savedFileName);
@@ -105,7 +107,7 @@ public class FileService {
         return dateTime + "_" + oriFileName;
     }
 
-    //　特定掲示板のファイルリストけんさ
+    //　特定掲示板のファイルリスト検査
     public List<File> getFilesByBoardId(Long boardId){
         //　掲示板のIDで検索
         return fileRepository.findByBoard_IdOrderByCreatedAtAsc(boardId);

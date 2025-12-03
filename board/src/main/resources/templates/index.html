@@ -15,6 +15,12 @@
         if(success && success[0] === 'signup'){
             alert('会員登録が完了しました！');
         }
+        if(success && success[0] === 'login'){
+            alert('ログインしました！');
+        }
+        if(success && success[0] === 'logout'){
+            alert('ログアウトしました！');
+        }
     </script>
     <a th:href="@{/}">
         <h1>掲示板</h1>

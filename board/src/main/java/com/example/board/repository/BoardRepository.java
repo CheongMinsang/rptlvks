@@ -23,8 +23,6 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
     //　 現在ページのデータ、全体の作成リストの数、全体ページの数、現在ページのナンバーの情報を持っている
     // Pageable pageable: ページングの情報
     //　 今何番目のページなのか、一ページに何個を見せてくれるか、どんな条件で見せるのかを確認できる
-    //　findAll: extends JpaRepositoryで使用
-    //　
     Page<Board> findAllByOrderByCreatedAtDesc(Pageable pageable);
     // 検索メソッド
     // タイトルに含まれるkeywordを検索

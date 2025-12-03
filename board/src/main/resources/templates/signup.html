@@ -31,7 +31,7 @@
         <label>ID:</label>
             <input type="text" name="username" required>
         <label>PASSWORD:</label>
-            <input type="password" id="password" name="password" required>
+            <input type="password" id="password" name="password" required oninput="checkPasswordMatch()">
         <label>PASSWORD再確認</label>
             <!--　入力するたびにcheckPasswordMatch()関数を実行 -->
             <input type="password" id="passwordConfirm" required oninput="checkPasswordMatch()">

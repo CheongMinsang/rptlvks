@@ -113,16 +113,17 @@ public class BoardController {
                             //　ファイルセーブ
                             fileService.saveFile(file, board);
                             System.out.println("ファイルセーブ完了" + files.size());
+                        // ファイルアップロードエラー時
                         } catch (IOException e) {
                             System.out.println("ファイルセーブ失敗" + e.getMessage());
                             e.printStackTrace();
                             //　失敗した場合
                             redirectAttributes.addFlashAttribute("error", "ファイルアップロードに失敗しました!"
                             + file.getOriginalFilename());
-                        } catch (Exception e) { // ⬅️ 추가
-                            System.err.println("FATAL ERROR during file upload loop: " + e.getMessage());
+                        } catch (Exception e) {
+                            System.err.println("掲示板作成失敗！1111111" + e.getMessage());
                             e.printStackTrace();
-                            redirectAttributes.addFlashAttribute("error", "치명적인 파일 업로드 오류 발생!");
+                            redirectAttributes.addFlashAttribute("error", "掲示板作成に失敗しました!1111111");
                         }
                     }
                 }
@@ -132,14 +133,14 @@ public class BoardController {
             return "redirect:/board/list";
 
         } catch (Exception e) {
-            System.err.println("掲示板削除失敗！" + e.getMessage());
+            System.err.println("掲示板作成失敗！2222222" + e.getMessage());
             e.printStackTrace();
-            redirectAttributes.addFlashAttribute("error","掲示板作成に失敗しました!");
+            redirectAttributes.addFlashAttribute("error","掲示板作成に失敗しました!2222222");
             return "redirect:/board/write";
         }
     }
 
-    //　詳細なページみる
+    //　詳細ページをみる
     @GetMapping("/{id}")
     public String boardDetail(@PathVariable Long id, Model model) {
         try {
@@ -175,6 +176,30 @@ public class BoardController {
     @GetMapping("/{id}/edit")
     public String editForm(@PathVariable Long id, Model model, HttpSession session,
                            RedirectAttributes redirectAttributes){
+
+        //ログインしていない場合
+        User loginUser = (User)session.getAttribute("loginUser");
+        if(loginUser == null){
+            redirectAttributes.addFlashAttribute("error","ログインが必要です！！");
+            return "redirect:/login";
+        }
+        Board board = boardService.getIdBoard(id);
+        //ファイルリスト
+        List<File> files = fileService.getFilesByBoardId(id);
+        //　作成した人とsessionが違う場合
+        if(!board.getUser().getId().equals(loginUser.getId())){
+            redirectAttributes.addFlashAttribute("error","自分が作成した物だけ修正できます！！");
+            return "redirect:/board/list";
+        }
+        model.addAttribute("board",board);
+        model.addAttribute("files", files);
+        return "board/edit";
+    }
+
+    //　修正
+    @GetMapping("/{id}/edit1")
+    public String editForm1(@PathVariable Long id, Model model, HttpSession session,
+                           RedirectAttributes redirectAttributes){
         User loginUser = (User)session.getAttribute("loginUser");
         if(loginUser == null){
             redirectAttributes.addFlashAttribute("error","ログインが必要です！！");
@@ -189,6 +214,7 @@ public class BoardController {
         model.addAttribute("board",board);
         return "board/edit";
     }
+
     //　修正処理
     @PostMapping("/{id}/edit")
     public String edit(@PathVariable Long id,

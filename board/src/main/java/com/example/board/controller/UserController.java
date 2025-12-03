@@ -48,7 +48,7 @@ public class UserController {
     //　ログインページ
     @GetMapping("/login")
     public String loginForm(){
-        //　templates/login.htmlを作る
+        //　templates/login.html
         return "login";
     }
 
@@ -62,7 +62,7 @@ public class UserController {
             User user = userService.login(username, password);
             session.setAttribute("loginUser", user);
             //　ホーム画面え戻る
-            return "redirect:/";
+            return "redirect:/?success=login";
         }catch(IllegalArgumentException e){
             // model.addAttribute("IDまたはPASSWORDが一致しません、もう一度確認してください。", e.getMessage());
             model.addAttribute("errorMessage", "IDまたはPASSWORDが一致しません、もう一度確認してください。");
@@ -76,6 +76,6 @@ public class UserController {
     public String logout(HttpSession session){
         session.invalidate();
         // ホームに戻る
-        return "redirect:/";
+        return "redirect:/?success=logout";
     }
 }
